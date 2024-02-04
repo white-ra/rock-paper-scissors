@@ -1,5 +1,7 @@
 package whitera.rockpaperscissors.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 import whitera.rockpaperscissors.exception.BadRequestException;
@@ -11,6 +13,7 @@ import whitera.rockpaperscissors.service.AuthenticationService;
 
 @RestController
 @RequestMapping("/api/auth")
+@Tag(name = "Authentication")
 public class AuthorizationController {
     private final AuthenticationService authenticationService;
 
@@ -18,7 +21,8 @@ public class AuthorizationController {
         this.authenticationService = authenticationService;
     }
 
-    @PostMapping(value = "/sign-up")
+    @Operation(summary = "User sign up")
+    @PostMapping("/sign-up")
     public JwtAuthenticationResponse signUp(@RequestBody @Valid SignUpRequest request) throws BadRequestException {
         try {
             return authenticationService.signUp(request);
@@ -27,7 +31,8 @@ public class AuthorizationController {
         }
     }
 
-    @PostMapping(value = "/sign-in")
+    @Operation(summary = "User sign in")
+    @PostMapping("/sign-in")
     public JwtAuthenticationResponse signIn(@RequestBody @Valid SignInRequest request) {
         return authenticationService.signIn(request);
     }

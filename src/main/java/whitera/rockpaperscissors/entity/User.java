@@ -42,7 +42,6 @@ public class User implements UserDetails {
         this.roles = roles;
     }
 
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles;
@@ -59,6 +58,7 @@ public class User implements UserDetails {
     public void setPassword(String password) {
         this.password = password;
     }
+
     @Override
     public String getUsername() {
         return username;

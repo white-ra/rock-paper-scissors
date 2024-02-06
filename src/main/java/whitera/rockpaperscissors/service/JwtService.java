@@ -8,7 +8,6 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import whitera.rockpaperscissors.entity.User;
 
 import java.security.Key;
@@ -55,8 +54,12 @@ public class JwtService {
     }
 
     private <T> T extractClaim(String token, Function<Claims, T> claimsResolvers) {
-        final Claims claims = extractAllClaims(token);
-        return claimsResolvers.apply(claims);
+        try {
+            final Claims claims = extractAllClaims(token);
+            return claimsResolvers.apply(claims);
+        } catch (Throwable exception) {
+            return null;
+        }
     }
 
     private Key getSigningKey() {

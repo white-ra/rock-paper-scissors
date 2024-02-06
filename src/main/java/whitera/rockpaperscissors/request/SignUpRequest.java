@@ -4,15 +4,17 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
+import java.io.Serializable;
+
 @Schema(description = "Sign up request")
-public class SignUpRequest {
+public class SignUpRequest implements Serializable {
     @Schema(description = "Username", example = "white-ra")
-    @Size(min = 3, max = 20, message = "The username must contain from 5 to 50 characters")
+    @Size(min = 3, max = 20)
     @NotBlank()
     private String username;
 
     @Schema(description = "Password", example = "P@s$w0rD")
-    @Size(min = 5, max = 50, message = "The password must contain from 5 to 50 characters")
+    @Size(min = 5, max = 50)
     @NotBlank()
     private String password;
 

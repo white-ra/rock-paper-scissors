@@ -3,8 +3,10 @@ package whitera.rockpaperscissors.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.*;
 import whitera.rockpaperscissors.exception.BadRequestException;
+import whitera.rockpaperscissors.exception.UnauthorizedRequestException;
 import whitera.rockpaperscissors.exception.UsernameIsAlreadyTakenException;
 import whitera.rockpaperscissors.request.SignInRequest;
 import whitera.rockpaperscissors.request.SignUpRequest;
@@ -33,7 +35,13 @@ public class AuthorizationController {
 
     @Operation(summary = "User sign in")
     @PostMapping("/sign-in")
-    public JwtAuthenticationResponse signIn(@RequestBody @Valid SignInRequest request) {
-        return authenticationService.signIn(request);
+    public JwtAuthenticationResponse signIn(
+        @RequestBody @Valid SignInRequest request
+    ) throws UnauthorizedRequestException {
+        try {
+            return authenticationService.signIn(request);
+        } catch (BadCredentialsException exception) {
+            throw new UnauthorizedRequestException("Bad credentials");
+        }
     }
 }

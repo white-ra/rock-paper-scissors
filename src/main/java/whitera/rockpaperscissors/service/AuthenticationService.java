@@ -1,6 +1,7 @@
 package whitera.rockpaperscissors.service;
 
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,7 +14,7 @@ import whitera.rockpaperscissors.request.SignInRequest;
 import whitera.rockpaperscissors.request.SignUpRequest;
 import whitera.rockpaperscissors.response.JwtAuthenticationResponse;
 
-import java.util.Collections;
+import java.util.List;
 
 @Service
 public class AuthenticationService {
@@ -44,7 +45,7 @@ public class AuthenticationService {
         User user = userFactory.create(
             signUpRequest.getUsername(),
             passwordEncoder.encode(signUpRequest.getPassword()),
-            Collections.singleton(roleRepository.findByName("ROLE_USER"))
+            List.of(roleRepository.findByName("ROLE_USER"))
         );
 
         userService.create(user);
@@ -52,7 +53,7 @@ public class AuthenticationService {
         return new JwtAuthenticationResponse(jwtService.generateToken(user));
     }
 
-    public JwtAuthenticationResponse signIn(SignInRequest request) {
+    public JwtAuthenticationResponse signIn(SignInRequest request) throws BadCredentialsException {
         authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
         );
